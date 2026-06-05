@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Andrews Insurance Lead Form</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f2f4f7;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 520px;
+      margin: auto;
+      background: white;
+      padding: 25px;
+      border-radius: 14px;
+      box-shadow: 0 2px 12px rgba(0,0,0,.12);
+    }
+
+    .company {
+      text-align: center;
+      color: navy;
+      font-weight: bold;
+      line-height: 1.2;
+      margin-bottom: 18px;
+    }
+
+    .owner {
+      font-size: 30px;
+    }
+
+    .business {
+      font-size: 22px;
+    }
+
+    .subtitle {
+      text-align: center;
+      margin-bottom: 22px;
+      color: #555;
+    }
+
+    label {
+      display: block;
+      font-weight: bold;
+      margin-top: 14px;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 12px;
+      box-sizing: border-box;
+      margin-top: 6px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+
+    textarea {
+      min-height: 90px;
+      resize: vertical;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 22px;
+      padding: 14px;
+      border: none;
+      border-radius: 8px;
+      background: navy;
+      color: white;
+      font-size: 17px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:disabled {
+      opacity: 0.65;
+      cursor: not-allowed;
+    }
+
+    .status {
+      margin-top: 16px;
+      text-align: center;
+      font-weight: bold;
+    }
+
+    .success {
+      color: green;
+    }
+
+    .error {
+      color: #b00020;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="company">
+      <div class="owner">Matt Andrews</div>
+      <div class="business">Andrews Insurance Inc</div>
+    </div>
+
+    <div class="subtitle">Lead Capture Form</div>
+
+    <label for="name">Customer Name</label>
+    <input id="name" placeholder="Customer full name" required>
+
+    <label for="phone">Phone Number</label>
+    <input id="phone" placeholder="Phone number" required>
+
+    <label for="email">Email Address</label>
+    <input id="email" placeholder="Email address">
+
+    <label for="notes">Notes</label>
+    <textarea id="notes" placeholder="Quick notes"></textarea>
+
+    <button id="sendButton" onclick="sendLead()">Send Lead</button>
+
+    <div id="status" class="status"></div>
+  </div>
+
+  <script>
+    async function sendLead() {
+      const button = document.getElementById("sendButton");
+      const status = document.getElementById("status");
+
+      const lead = {
+        name: document.getElementById("name").value.trim(),
+        phone: document.getElementById("phone").value.trim(),
+        email: document.getElementById("email").value.trim(),
+        notes: document.getElementById("notes").value.trim()
+      };
+
+      if (!lead.name || !lead.phone) {
+        status.textContent = "Please enter customer name and phone number.";
+        status.className = "status error";
+        return;
+      }
+
+      button.disabled = true;
+      button.textContent = "Sending...";
+      status.textContent = "";
+
+      try {
+        const response = await fetch("/send-lead", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(lead)
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+          throw new Error(result.message || "Email failed.");
+        }
+
+        status.textContent = "Lead sent successfully.";
+        status.className = "status success";
+
+        document.getElementById("name").value = "";
+        document.getElementById("phone").value = "";
+        document.getElementById("email").value = "";
+        document.getElementById("notes").value = "";
+
+      } catch (error) {
+        status.textContent = "Error sending lead. Please try again.";
+        status.className = "status error";
+        console.error(error);
+      } finally {
+        button.disabled = false;
+        button.textContent = "Send Lead";
+      }
+    }
+  </script>
+</body>
+</html>
