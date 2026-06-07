@@ -1,7 +1,7 @@
 const express = require("express");
 const nodemailer = require("nodemailer");
 const path = require("path");
-require('dotenv').config({ path: './env.txt' });
+require("dotenv").config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -20,14 +20,18 @@ app.post("/send-lead", async (req, res) => {
       timeZone: "America/New_York"
     });
 
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: process.env.GMAIL_USER,
-        pass: process.env.GMAIL_APP_PASSWORD
-      }
-    });
-
+const transporter = nodemailer.createTransport({
+  host: "smtp.gmail.com",
+  port: 465,
+  secure: true,
+  auth: {
+    user: process.env.GMAIL_USER,
+    pass: process.env.GMAIL_APP_PASSWORD
+  },
+  connectionTimeout: 20000,
+  greetingTimeout: 20000,
+  socketTimeout: 20000
+});
     const mailOptions = {
       from: `"Andrews Lead Form" <${process.env.GMAIL_USER}>`,
       to: process.env.LEAD_RECIPIENT_EMAIL,
