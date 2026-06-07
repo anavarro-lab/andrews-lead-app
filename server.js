@@ -24,6 +24,9 @@ const transporter = nodemailer.createTransport({
   port: 587,
   secure: false,
   requireTLS: true,
+tls: {
+  rejectUnauthorized: false
+},
   auth: {
     user: process.env.GMAIL_USER,
     pass: process.env.GMAIL_APP_PASSWORD
@@ -54,9 +57,10 @@ ${notes || "No notes provided"}
 
 Captured from the Andrews Insurance Lead Form.`
     };
-
+    
+    console.log("Attempting to send email...");
     await transporter.sendMail(mailOptions);
-
+    console.log("Email sent successfully");
     res.json({ message: "Lead sent successfully." });
 
   } catch (error) {
