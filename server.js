@@ -21,8 +21,9 @@ app.post("/send-lead", async (req, res) => {
 
 const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
-  port: 465,
-  secure: true,
+  port: 587,
+  secure: false,
+  requireTLS: true,
   auth: {
     user: process.env.GMAIL_USER,
     pass: process.env.GMAIL_APP_PASSWORD
@@ -31,7 +32,8 @@ const transporter = nodemailer.createTransport({
   greetingTimeout: 20000,
   socketTimeout: 20000
 });
-    await transporter.verify();
+
+await transporter.verify();
 console.log("SMTP connection verified");
     
     const mailOptions = {
