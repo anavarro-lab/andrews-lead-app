@@ -37,9 +37,6 @@ ${notes || "No notes provided"}
 
 Captured from the Andrews Insurance Lead Form.`
 });
-
-console.log("Email sent successfully");
-
     console.log("Email sent successfully");
     res.json({ message: "Lead sent successfully." });
 
