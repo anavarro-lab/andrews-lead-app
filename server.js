@@ -1,6 +1,5 @@
 const express = require("express");
 const nodemailer = require("nodemailer");
-const path = require("path");
 require("dotenv").config();
 
 const app = express();
@@ -32,6 +31,9 @@ const transporter = nodemailer.createTransport({
   greetingTimeout: 20000,
   socketTimeout: 20000
 });
+    await transporter.verify();
+console.log("SMTP connection verified");
+    
     const mailOptions = {
       from: `"Andrews Lead Form" <${process.env.GMAIL_USER}>`,
       to: process.env.LEAD_RECIPIENT_EMAIL,
