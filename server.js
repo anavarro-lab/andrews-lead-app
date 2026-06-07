@@ -1,6 +1,7 @@
 const express = require("express");
-const nodemailer = require("nodemailer");
+const { Resend } = require("resend");
 require("dotenv").config();
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -18,33 +19,12 @@ app.post("/send-lead", async (req, res) => {
     const now = new Date().toLocaleString("en-US", {
       timeZone: "America/New_York"
     });
-
-const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 587,
-  secure: false,
-  requireTLS: true,
-tls: {
-  rejectUnauthorized: false
-},
-  auth: {
-    user: process.env.GMAIL_USER,
-    pass: process.env.GMAIL_APP_PASSWORD
-  },
-  connectionTimeout: 20000,
-  greetingTimeout: 20000,
-  socketTimeout: 20000
-});
-
-await transporter.verify();
-console.log("SMTP connection verified");
     
-    const mailOptions = {
-      from: `"Andrews Lead Form" <${process.env.GMAIL_USER}>`,
-      to: process.env.LEAD_RECIPIENT_EMAIL,
-      subject: `New Insurance Lead: ${name}`,
-      text:
-`New Insurance Lead
+await resend.emails.send({
+  from: "onboarding@resend.dev",
+  to: process.env.LEAD_RECIPIENT_EMAIL,
+  subject: `New Insurance Lead: ${name}`,
+  text: `New Insurance Lead
 
 Date: ${now}
 
@@ -56,10 +36,10 @@ Notes:
 ${notes || "No notes provided"}
 
 Captured from the Andrews Insurance Lead Form.`
-    };
-    
-    console.log("Attempting to send email...");
-    await transporter.sendMail(mailOptions);
+});
+
+console.log("Email sent successfully");
+
     console.log("Email sent successfully");
     res.json({ message: "Lead sent successfully." });
 
