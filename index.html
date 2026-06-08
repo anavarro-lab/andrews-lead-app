@@ -49,15 +49,15 @@
       margin-top: 14px;
     }
 
-    input, textarea {
-      width: 100%;
-      padding: 12px;
-      box-sizing: border-box;
-      margin-top: 6px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      font-size: 16px;
-    }
+  input, textarea, select {
+  width: 100%;
+  padding: 12px;
+  box-sizing: border-box;
+  margin-top: 6px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 16px;
+}
 
     textarea {
       min-height: 90px;
@@ -104,10 +104,17 @@
       <div class="business">Andrews Insurance Inc</div>
     </div>
 
-    <div class="subtitle">Lead Capture Form</div>
+<div class="subtitle">Lead Capture Form</div>
 
-    <label for="name">Customer Name</label>
-    <input id="name" placeholder="Customer full name" required>
+<label for="agent">Agent</label>
+<select id="agent">
+  <option value="">Select Agent</option>
+  <option value="Matt Andrews">Matt Andrews</option>
+  <option value="Tony Navarro">Tony Navarro</option>
+</select>
+
+<label for="name">Customer Name</label>
+<input id="name" placeholder="Customer full name" required>
 
     <label for="phone">Phone Number</label>
     <input id="phone" placeholder="Phone number" required>
